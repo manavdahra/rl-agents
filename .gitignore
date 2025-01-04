@@ -19,3 +19,6 @@ _build
 
 # Outputs
 **/out/*
+
+# Builds
+build

@@ -70,13 +70,14 @@ class DQNGraphics(object):
                     colors = sns.color_palette("dark", desat=desat)
                     color = np.array(colors[(2*head) % (len(colors) - 1)]) * 255
                     color = (*color, remap(attention[head], (0, 0.5), (100, 200), clip=True))
-                    if vehicle is agent.env.vehicle:
+                    unwrapped_env = agent.env.unwrapped
+                    if vehicle is unwrapped_env.vehicle:
                         pygame.draw.circle(attention_surface, color,
-                                           sim_surface.vec2pix(agent.env.vehicle.position),
+                                           sim_surface.vec2pix(unwrapped_env.vehicle.position),
                                            max(sim_surface.pix(width / 2), 1))
                     else:
                         pygame.draw.line(attention_surface, color,
-                                         sim_surface.vec2pix(agent.env.vehicle.position),
+                                         sim_surface.vec2pix(unwrapped_env.vehicle.position),
                                          sim_surface.vec2pix(vehicle.position),
                                          max(sim_surface.pix(width), 1))
                 sim_surface.blit(attention_surface, (0, 0))
@@ -91,7 +92,8 @@ class DQNGraphics(object):
         ego, others, mask = agent.value_net.split_input(state_t)
         mask = mask.squeeze()
         v_attention = {}
-        obs_type = agent.env.observation_type
+        unwrapped_env = agent.env.unwrapped
+        obs_type = unwrapped_env.observation_type
         if hasattr(obs_type, "agents_observation_types"):  # Handle multi-agent observation
             obs_type = obs_type.agents_observation_types[0]
         for v_index in range(state.shape[0]):
@@ -104,9 +106,9 @@ class DQNGraphics(object):
                 v_position[feature] = v_feature
             v_position = np.array([v_position["x"], v_position["y"]])
             if not obs_type.absolute and v_index > 0:
-                v_position += agent.env.unwrapped.vehicle.position
-            vehicle = min(agent.env.road.vehicles, key=lambda v: np.linalg.norm(v.position - v_position))
-            vehicle = agent.env.unwrapped.vehicle if v_index == 0 else vehicle
+                v_position += unwrapped_env.unwrapped.vehicle.position
+            vehicle = min(unwrapped_env.road.vehicles, key=lambda v: np.linalg.norm(v.position - v_position))
+            vehicle = unwrapped_env.unwrapped.vehicle if v_index == 0 else vehicle
             v_attention[vehicle] = attention[:, v_index]
         return v_attention
 

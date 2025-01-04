@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='rl-agents',
-    version='1.0.dev0',
-    description='A collection of Reinforcement Learning agents',
-    url='https://github.com/eleurent/rl-agents',
-    author='Edouard Leurent',
-    author_email='eleurent@gmail.com',
+    version='1.0.0',
+    description='A collection of Reinforcement Learning agents. Forked form',
+    url='https://github.com/manavdahra/rl-agents',
+    author='Manav Dahra',
+    author_email='manav.dahra@gmail.com',
     license='MIT',
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -17,8 +17,23 @@ setup(
 
     keywords='reinforcement learning agents',
     packages=find_packages(exclude=['docs', 'scripts', 'tests*']),
-    install_requires=['gymnasium', 'numpy', 'pandas', 'numba', 'pygame', 'matplotlib', 'seaborn', 'six', 'docopt',
-                      'torch>=1.2.0', 'tensorboardX', 'scipy'],
+    install_requires=[
+        'gymnasium', 
+        'gymnasium[other]',
+        'numpy', 
+        'pandas', 
+        'numba', 
+        'pygame', 
+        'matplotlib', 
+        'seaborn', 
+        'six', 
+        'docopt',
+        'torch>=1.2.0', 
+        'tensorboard',
+        'tensorboardX', 
+        'scipy',
+        'highway_env@git+https://github.com/manavdahra/highway-env',
+    ],
     tests_require=['pytest'],
     extras_require={
         'dev': ['scipy'],

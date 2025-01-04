@@ -7,7 +7,8 @@ from multiprocessing.pool import Pool
 from pathlib import Path
 import numpy as np
 from tensorboardX import SummaryWriter
-from gymnasium.wrappers import RecordVideo, RecordEpisodeStatistics, capped_cubic_video_schedule
+from gymnasium.wrappers import RecordVideo, RecordEpisodeStatistics
+from gymnasium.utils.save_video import capped_cubic_video_schedule
 
 import rl_agents.trainer.logger
 from rl_agents.agents.common.factory import load_environment, load_agent
@@ -91,7 +92,7 @@ class Evaluation(object):
         self.write_logging()
         self.write_metadata()
         self.filtered_agent_stats = 0
-        self.best_agent_stats = -np.infty, 0
+        self.best_agent_stats = -np.inf, 0
 
         self.recover = recover
         if self.recover:
@@ -100,6 +101,7 @@ class Evaluation(object):
         if display_agent:
             try:
                 # Render the agent within the environment viewer, if supported
+                self.env.reset()
                 self.env.render()
                 self.env.unwrapped.viewer.directory = self.run_directory
                 self.env.unwrapped.viewer.set_agent_display(
